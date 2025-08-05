@@ -1,8 +1,9 @@
 import express, { urlencoded } from "express";
-
+import { serverInit } from "./services/serverInit.js";
 import UserRouter from "./routes/usuarios.routes.js";
 
 const app = express();
+
 const PORT = process.env.PORT || 3000; // si no encuentra la var PORT en las variables de entorno, usará el 3000
 
 //middleware para...
@@ -11,6 +12,4 @@ app.use(urlencoded({ extended: true })); // parsear multidata
 
 app.use("/api/v1", UserRouter);
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-});
+serverInit(app, PORT);
