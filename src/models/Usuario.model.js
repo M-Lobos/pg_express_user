@@ -25,11 +25,23 @@ export class Usuario {
         [id, name, lastname, email, phone, birth_date, budget, active]
       );
       return rows;
-  
     } catch (error) {
       console.error("error al crear el usuario", error.message);
       throw new Error(`error al crear el usuario ${error}`);
     }
   }
+
+  static async findAllActive() {
+    try {
+      const findQuery = `SELECT * FROM usuarios WHERE active = $1`;
+      const value = [true];
+
+      const { rows } = await query(findQuery, value);
+
+      return rows;
+    } catch (error) {
+      console.error("error al encontrar usuarios activos", error.message);
+      throw new Error(`error al encontrar usuarios activos ${error}`);
+    }
+  }
 }
-  
