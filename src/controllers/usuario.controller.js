@@ -33,3 +33,21 @@ export const findAll = async (req, res) => {
     });
   }
 };
+
+export const findById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await Usuario.findActiveById(id);
+    res.status(201).json({
+      message: `usuario de id ${id} encontrado con éxito`,
+      status: 201,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `error al encontrar el usuarios de id: ${id}`,
+      status: 500,
+    });
+  }
+};

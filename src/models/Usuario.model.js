@@ -44,4 +44,18 @@ export class Usuario {
       throw new Error(`error al encontrar usuarios activos ${error}`);
     }
   }
+
+  static async findActiveById(id) {
+    try {
+      const findQuery = `SELECT * FROM usuarios WHERE id = $1 AND active = $2`;
+      const value = [id, true];
+
+      const { rows } = await query(findQuery, value);
+
+      return rows;
+    } catch (error) {
+      console.error("error al encontrar al usuario", error.message);
+      throw new Error(`error al encontrar usuario por id: ${id}`);
+    }
+  }
 }
