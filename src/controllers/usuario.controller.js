@@ -39,15 +39,40 @@ export const findById = async (req, res) => {
     const { id } = req.params;
 
     const user = await Usuario.findActiveById(id);
-    res.status(201).json({
+
+    /*   */
+
+    res.status(200).json({
       message: `usuario de id ${id} encontrado con éxito`,
-      status: 201,
+      status: 200,
       data: user,
     });
   } catch (error) {
     res.status(500).json({
       message: `error al encontrar el usuarios de id: ${id}`,
       status: 500,
+      error,
+    });
+  }
+};
+
+export const updateById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const userUpdated = await Usuario.updateUsuario(id, data);
+
+    res.status(200).json({
+      message: "Usuario actualizado con éxito",
+      status: 200,
+      data: userUpdated,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `error al acualizar el usuarios de id: ${id}`,
+      status: 500,
+      error,
     });
   }
 };

@@ -52,9 +52,43 @@ export class Usuario {
 
       const { rows } = await query(findQuery, value);
 
+      if (rows.length <= 0) throw new Error("No udimos encontrar el ID");
+
       return rows;
     } catch (error) {
       console.error("error al encontrar al usuario", error.message);
+      throw new Error(`error al encontrar usuario por id: ${id}`);
+    }
+  }
+
+  static async updateUsuario(id, data) {
+    try {
+      const { name, lastname, email, phone, birth_date, budget } = data;
+
+      console.log("check point 2:", id, data);
+
+      const updateQuery = `
+        UPDATE usuarios 
+        SET 
+          name = $1,
+          lastname = $2, 
+          email = $3, 
+          phone = $4, 
+          birth_date= $5,
+          budget= $6 
+        
+        WHERE id = $7 AND active = true 
+        RETURNING * ; `;
+
+      const values = [name, lastname, email, phone, birth_date, budget, id];
+
+      const { rows } = await query(updateQuery, values);
+
+      if (rows.length === 0) throw new Error("No se encuentra el ID");
+
+      return rows[0];
+    } catch (error) {
+      console.error("error al actualizar al usuario por id", error.message);
       throw new Error(`error al encontrar usuario por id: ${id}`);
     }
   }
