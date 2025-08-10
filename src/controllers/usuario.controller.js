@@ -21,9 +21,9 @@ export const findAll = async (req, res) => {
   try {
     const user = await Usuario.findAllActive();
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Usuarios activos encontrados con éxito",
-      status: 201,
+      status: 200,
       data: user,
     });
   } catch (error) {
@@ -37,10 +37,7 @@ export const findAll = async (req, res) => {
 export const findById = async (req, res) => {
   try {
     const { id } = req.params;
-
     const user = await Usuario.findActiveById(id);
-
-    /*   */
 
     res.status(200).json({
       message: `usuario de id ${id} encontrado con éxito`,
@@ -72,7 +69,44 @@ export const updateById = async (req, res) => {
     res.status(500).json({
       message: `error al acualizar el usuarios de id: ${id}`,
       status: 500,
-      error,
+    });
+  }
+};
+
+export const permaDeleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataDeleted = await Usuario.permaDelete(id);
+
+    res.status(200).json({
+      message: "usuario eliminado permanentemente con éxito",
+      status: 200,
+      data: dataDeleted,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `error al eliminar permanentemente el usuarios de id: ${id}`,
+      status: 500,
+    });
+  }
+};
+
+export const softDeleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataDeleted = await Usuario.softDelete(id);
+
+    res.status(200).json({
+      message: "usuario eliminado con éxito",
+      status: 200,
+      data: dataDeleted,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `error al eliminar el usuarios de id: ${id}`,
+      status: 500,
     });
   }
 };

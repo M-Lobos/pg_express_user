@@ -65,8 +65,6 @@ export class Usuario {
     try {
       const { name, lastname, email, phone, birth_date, budget } = data;
 
-      console.log("check point 2:", id, data);
-
       const updateQuery = `
         UPDATE usuarios 
         SET 
@@ -90,6 +88,33 @@ export class Usuario {
     } catch (error) {
       console.error("error al actualizar al usuario por id", error.message);
       throw new Error(`error al encontrar usuario por id: ${id}`);
+    }
+  }
+
+  static async permaDelete(id) {
+    try {
+      const deleteQuery = `DELETE FROM usuarios WHERE id = $1 AND active = true`;
+      const value = [id];
+
+      await query(deleteQuery, value);
+    } catch (error) {
+      console.error("error al eliminar  al usuario por id", error.message);
+      throw new Error(`error al eliminar usuario por id: ${id}`);
+    }
+  }
+
+  static async softDelete(id) {
+    try {
+      const softDeleteQuery = `UPDATE usuarios SET active = false WHERE id=$1 AND active = true RETURNING *`;
+      const value = [id];
+
+      const { rows } = await query(softDeleteQuery, value);
+      if (rows.length === 0) throw new Error("No se encuentra el ID");
+
+      return rows[0 ];
+    } catch (error) {
+      console.error("error al eliminar  al usuario por id", error.message);
+      throw new Error(`error al eliminar usuario por id: ${id}`);
     }
   }
 }
