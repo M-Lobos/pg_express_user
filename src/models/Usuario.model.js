@@ -20,10 +20,39 @@ export class Usuario {
       const id = uuidv4();
       const active = true;
 
-      const { rows } = await query(
-        "INSERT INTO usuarios (id, name, lastname, email, phone, birth_date, budget, active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-        [id, name, lastname, email, phone, birth_date, budget, active]
-      );
+      const createQuery = `INSERT INTO usuarios (
+        id, 
+        name, 
+        lastname, 
+        email, 
+        phone, 
+        birth_date, 
+        budget, 
+        active) 
+      VALUES (
+        $1, 
+        $2, 
+        $3, 
+        $4, 
+        $5, 
+        $6, 
+        $7, 
+        $8) 
+      RETURNING *`;
+
+      const values = [
+        id,
+        name,
+        lastname,
+        email,
+        phone,
+        birth_date,
+        budget,
+        active,
+      ];
+
+      const { rows } = await query(createQuery, values);
+      
       return rows;
     } catch (error) {
       console.error("error al crear el usuario", error.message);
@@ -111,7 +140,7 @@ export class Usuario {
       const { rows } = await query(softDeleteQuery, value);
       if (rows.length === 0) throw new Error("No se encuentra el ID");
 
-      return rows[0 ];
+      return rows[0];
     } catch (error) {
       console.error("error al eliminar  al usuario por id", error.message);
       throw new Error(`error al eliminar usuario por id: ${id}`);
